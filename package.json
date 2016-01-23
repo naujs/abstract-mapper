@@ -1,5 +1,5 @@
 {
-  "name": "@naujs/base-mapper",
+  "name": "@naujs/data-mapper",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,18 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/naujs/base-mapper.git"
+    "url": "git+https://github.com/naujs/data-mapper.git"
   },
   "author": "Tan Nguyen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/naujs/base-mapper/issues"
+    "url": "https://github.com/naujs/data-mapper/issues"
   },
-  "homepage": "https://github.com/naujs/base-mapper#readme",
+  "homepage": "https://github.com/naujs/data-mapper#readme",
   "dependencies": {
-    "@naujs/component": "^0.0.5",
-    "@naujs/persisted-model": "0.0.2",
-    "@naujs/util": "^0.0.5",
+    "@naujs/component": "^0.1.0",
+    "@naujs/model": "^0.1.1",
+    "@naujs/persisted-model": "^0.2.6",
+    "@naujs/util": "0.0.6",
     "lodash": "^3.10.1"
   },
   "devDependencies": {
