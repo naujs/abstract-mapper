@@ -18,7 +18,6 @@
   "homepage": "https://github.com/naujs/data-mapper#readme",
   "dependencies": {
     "@naujs/component": "^0.1.0",
-    "@naujs/model": "^0.1.1",
     "@naujs/persisted-model": "^0.2.6",
     "@naujs/util": "0.0.6",
     "lodash": "^3.10.1"
