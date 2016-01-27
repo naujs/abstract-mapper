@@ -118,6 +118,20 @@ var DataMapper = function (_Component) {
       });
     }
   }, {
+    key: 'findByPk',
+    value: function findByPk(Model, value) {
+      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+      var pk = Model.prototype.primaryKey();
+
+      var where = {};
+      where[pk] = value;
+
+      return this.find(Model, {
+        where: where
+      }, options);
+    }
+  }, {
     key: 'findAll',
     value: function findAll(Model, criteria) {
       var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];

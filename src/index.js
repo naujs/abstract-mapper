@@ -99,6 +99,17 @@ class DataMapper extends Component {
     });
   }
 
+  findByPk(Model, value, options = {}) {
+    let pk = Model.prototype.primaryKey();
+
+    let where = {};
+    where[pk] = value;
+
+    return this.find(Model, {
+      where: where
+    }, options);
+  }
+
   findAll(Model, criteria, options = {}) {
     let name = Model.prototype.modelName();
     return this.getConnector().findAll(name, criteria, options).then((results) => {

@@ -13,6 +13,10 @@ DummyConnector.prototype.create = jasmine.createSpy('create');
 DummyConnector.prototype.update = jasmine.createSpy('update');
 
 class DummyModel extends PersistedModel {
+  primaryKey() {
+    return 'id';
+  }
+
   modelName() {
     return 'test';
   }
@@ -105,6 +109,26 @@ describe('DataMapper', () => {
       }).catch(fail).then(done);
     });
 
+  });
+
+  describe('#findByPk', () => {
+    it('should call #find with correct criteria', (done) => {
+      spyOn(mapper, 'find').and.callFake(() => {
+        return Promise.resolve({});
+      });
+
+      var options = {
+        random: 'stuff'
+      };
+
+      mapper.findByPk(DummyModel, 1, options).then(() => {
+        expect(mapper.find).toHaveBeenCalledWith(DummyModel, {
+          where: {
+            'id': 1
+          }
+        }, options);
+      }).then(done, fail);
+    });
   });
 
   describe('#findAll', () => {
