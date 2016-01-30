@@ -358,7 +358,9 @@ describe('DataMapper', () => {
 
       mapper.update(instance, options).then(() => {
         expect(connector.update).toHaveBeenCalledWith('test', {
-          id: 1
+          where: {
+            id: 1
+          }
         }, {
           firstName: 'Tan',
           lastName: 'Nguyen'
@@ -504,7 +506,9 @@ describe('DataMapper', () => {
 
       mapper.delete(instance, options).then(() => {
         expect(connector.delete).toHaveBeenCalledWith('test', {
-          id: 1
+          where: {
+            id: 1
+          }
         }, options);
       }).catch(fail).then(done);
     });

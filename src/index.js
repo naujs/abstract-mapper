@@ -199,8 +199,9 @@ class DataMapper extends Component {
         let attributes = model.getPersistableAttributes();
         let name = model.modelName();
         let criteria = {};
+        criteria.where = {};
         let primaryKey = model.primaryKey();
-        criteria[primaryKey] = model.getPrimaryKeyValue();
+        criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
         return this.getConnector().update(name, criteria, attributes, options).then((result) => {
           model.setAttributes(result);
@@ -234,8 +235,9 @@ class DataMapper extends Component {
       let attributes = model.getPersistableAttributes();
       let name = model.modelName();
       let criteria = {};
+      criteria.where = {};
       let primaryKey = model.primaryKey();
-      criteria[primaryKey] = model.getPrimaryKeyValue();
+      criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
       return this.getConnector().delete(name, criteria, options).then((result) => {
         return onAfterDelete(model, options);

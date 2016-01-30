@@ -233,8 +233,9 @@ var DataMapper = (function (_Component) {
           var attributes = model.getPersistableAttributes();
           var name = model.modelName();
           var criteria = {};
+          criteria.where = {};
           var primaryKey = model.primaryKey();
-          criteria[primaryKey] = model.getPrimaryKeyValue();
+          criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
           return _this3.getConnector().update(name, criteria, attributes, options).then(function (result) {
             model.setAttributes(result);
@@ -276,8 +277,9 @@ var DataMapper = (function (_Component) {
         var attributes = model.getPersistableAttributes();
         var name = model.modelName();
         var criteria = {};
+        criteria.where = {};
         var primaryKey = model.primaryKey();
-        criteria[primaryKey] = model.getPrimaryKeyValue();
+        criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
         return _this4.getConnector().delete(name, criteria, options).then(function (result) {
           return onAfterDelete(model, options);
