@@ -85,7 +85,6 @@ class DataMapper extends Component {
    */
   find(Model, criteria, options = {}) {
     let name = Model.prototype.modelName();
-
     return this.getConnector().find(name, criteria, options).then((result) => {
       if (!result) {
         return null;
@@ -132,7 +131,7 @@ class DataMapper extends Component {
 
   }
 
-  create(model, options) {
+  create(model, options = {}) {
     checkPersistedModel(model);
 
     if (!model.isNew()) {
@@ -160,7 +159,7 @@ class DataMapper extends Component {
     });
   }
 
-  update(model, options) {
+  update(model, options = {}) {
     checkPersistedModel(model);
 
     if (model.isNew()) {
@@ -191,16 +190,16 @@ class DataMapper extends Component {
     });
   }
 
-  save(model, options) {
+  save(model, options = {}) {
     checkPersistedModel(model);
 
     if (model.isNew()) {
       return this.create(model, options);
     }
-    return this.update(model.options);
+    return this.update(model, options);
   }
 
-  delete(model, options) {
+  delete(model, options = {}) {
     checkPersistedModel(model);
 
     if (model.isNew()) {

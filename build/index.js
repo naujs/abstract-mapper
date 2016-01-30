@@ -104,7 +104,6 @@ var DataMapper = (function (_Component) {
       var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
       var name = Model.prototype.modelName();
-
       return this.getConnector().find(name, criteria, options).then(function (result) {
         if (!result) {
           return null;
@@ -157,8 +156,10 @@ var DataMapper = (function (_Component) {
     value: function findRelation(model, relationName, criteria) {}
   }, {
     key: 'create',
-    value: function create(model, options) {
+    value: function create(model) {
       var _this2 = this;
+
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       checkPersistedModel(model);
 
@@ -188,8 +189,10 @@ var DataMapper = (function (_Component) {
     }
   }, {
     key: 'update',
-    value: function update(model, options) {
+    value: function update(model) {
       var _this3 = this;
+
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       checkPersistedModel(model);
 
@@ -222,17 +225,21 @@ var DataMapper = (function (_Component) {
     }
   }, {
     key: 'save',
-    value: function save(model, options) {
+    value: function save(model) {
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
       checkPersistedModel(model);
 
       if (model.isNew()) {
         return this.create(model, options);
       }
-      return this.update(model.options);
+      return this.update(model, options);
     }
   }, {
     key: 'delete',
-    value: function _delete(model, options) {
+    value: function _delete(model) {
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
       checkPersistedModel(model);
 
       if (model.isNew()) {
