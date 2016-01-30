@@ -60,6 +60,26 @@ function onAfterUpdate(instance, options) {
   });
 }
 
+function onBeforeDelete(instance, options) {
+  let onBeforeDelete = instance.onBeforeDelete(options);
+
+  return util.tryPromise(onBeforeDelete).then((result) => {
+    if (!result) {
+      return false;
+    }
+
+    return instance;
+  });
+}
+
+function onAfterDelete(instance, options) {
+  let onAfterDelete = instance.onAfterDelete(options);
+
+  return util.tryPromise(onAfterDelete).then(() => {
+    return instance;
+  });
+}
+
 var instance = null;
 
 class DataMapper extends Component {
@@ -205,6 +225,22 @@ class DataMapper extends Component {
     if (model.isNew()) {
       return Promise.reject('Cannot delete new model');
     }
+
+    return onBeforeDelete(model, options).then((result) => {
+      if (!result) {
+        return false;
+      }
+
+      let attributes = model.getPersistableAttributes();
+      let name = model.modelName();
+      let criteria = {};
+      let primaryKey = model.primaryKey();
+      criteria[primaryKey] = model.getPrimaryKeyValue();
+
+      return this.getConnector().delete(name, criteria, options).then((result) => {
+        return onAfterDelete(model, options);
+      });
+    });
   }
 }
 

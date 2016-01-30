@@ -68,6 +68,26 @@ function onAfterUpdate(instance, options) {
   });
 }
 
+function onBeforeDelete(instance, options) {
+  var onBeforeDelete = instance.onBeforeDelete(options);
+
+  return util.tryPromise(onBeforeDelete).then(function (result) {
+    if (!result) {
+      return false;
+    }
+
+    return instance;
+  });
+}
+
+function onAfterDelete(instance, options) {
+  var onAfterDelete = instance.onAfterDelete(options);
+
+  return util.tryPromise(onAfterDelete).then(function () {
+    return instance;
+  });
+}
+
 var instance = null;
 
 var DataMapper = (function (_Component) {
@@ -238,6 +258,8 @@ var DataMapper = (function (_Component) {
   }, {
     key: 'delete',
     value: function _delete(model) {
+      var _this4 = this;
+
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       checkPersistedModel(model);
@@ -245,6 +267,22 @@ var DataMapper = (function (_Component) {
       if (model.isNew()) {
         return Promise.reject('Cannot delete new model');
       }
+
+      return onBeforeDelete(model, options).then(function (result) {
+        if (!result) {
+          return false;
+        }
+
+        var attributes = model.getPersistableAttributes();
+        var name = model.modelName();
+        var criteria = {};
+        var primaryKey = model.primaryKey();
+        criteria[primaryKey] = model.getPrimaryKeyValue();
+
+        return _this4.getConnector().delete(name, criteria, options).then(function (result) {
+          return onAfterDelete(model, options);
+        });
+      });
     }
   }]);
 

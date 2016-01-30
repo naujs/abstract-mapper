@@ -11,6 +11,7 @@ DummyConnector.prototype.find = jasmine.createSpy('find');
 DummyConnector.prototype.findAll = jasmine.createSpy('findAll');
 DummyConnector.prototype.create = jasmine.createSpy('create');
 DummyConnector.prototype.update = jasmine.createSpy('update');
+DummyConnector.prototype.delete = jasmine.createSpy('delete');
 
 class DummyModel extends PersistedModel {
   primaryKey() {
@@ -480,6 +481,75 @@ describe('DataMapper', () => {
 
       mapper.update(instance, options).then(() => {
         expect(instance.onAfterUpdate).toHaveBeenCalledWith(options);
+      }).catch(fail).then(done);
+    });
+  });
+
+  describe('#delete', () => {
+    it('should call #delete on the connector', (done) => {
+      var instance = new DummyModel({
+        id: 1,
+        firstName: 'Tan',
+        lastName: 'Nguyen',
+        name: 'Tan Nguyen'
+      });
+
+      connector.delete.and.callFake(() => {
+        return Promise.resolve(instance);
+      });
+
+      var options = {
+        random: 'stuff'
+      };
+
+      mapper.delete(instance, options).then(() => {
+        expect(connector.delete).toHaveBeenCalledWith('test', {
+          id: 1
+        }, options);
+      }).catch(fail).then(done);
+    });
+
+    it('should call #onBeforeDelete on the model', (done) => {
+      var instance = new DummyModel({
+        id: 1
+      });
+
+      connector.delete.and.callFake(() => {
+        return Promise.resolve(instance);
+      });
+
+      spyOn(instance, 'onBeforeDelete').and.callFake(() => {
+        return Promise.resolve(true);
+      });
+
+      var options = {
+        random: 'stuff'
+      };
+
+      mapper.delete(instance, options).then(() => {
+        expect(instance.onBeforeDelete).toHaveBeenCalledWith(options);
+      }).catch(fail).then(done);
+    });
+
+    it('should call #onAfterDelete on the model', (done) => {
+      var instance = new DummyModel({
+        id: 1
+      });
+
+      connector.delete.and.callFake(() => {
+        return Promise.resolve(instance);
+      });
+
+      spyOn(instance, 'onAfterDelete').and.callFake(() => {
+        return Promise.resolve(true);
+      });
+
+      var options = {
+        random: 'stuff'
+      };
+
+      mapper.delete(instance, options).then(() => {
+        expect(instance.onAfterDelete).toHaveBeenCalledWith(options);
       }).catch(fail).then(done);
     });
   });
