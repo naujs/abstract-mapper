@@ -119,21 +119,20 @@ var DataMapper = (function (_Component) {
      */
 
   }, {
-    key: 'find',
-    value: function find(Model, criteria) {
+    key: 'findOne',
+    value: function findOne(Model) {
+      var criteria = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
       var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
       var name = Model.prototype.modelName();
-      return this.getConnector().find(name, criteria, options).then(function (result) {
-        if (!result) {
-          return null;
+      criteria.limit = 1;
+
+      return this.findAll(Model, criteria, options).then(function (instances) {
+        if (instances.length) {
+          return instances[0];
         }
 
-        var instance = new Model(result);
-
-        return onAfterFind(instance, options).then(function () {
-          return instance;
-        });
+        return null;
       });
     }
   }, {
@@ -146,7 +145,7 @@ var DataMapper = (function (_Component) {
       var where = {};
       where[pk] = value;
 
-      return this.find(Model, {
+      return this.findOne(Model, {
         where: where
       }, options);
     }
@@ -156,7 +155,7 @@ var DataMapper = (function (_Component) {
       var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
       var name = Model.prototype.modelName();
-      return this.getConnector().findAll(name, criteria, options).then(function (results) {
+      return this.getConnector().read(name, criteria, options).then(function (results) {
         if (!_.isArray(results) || !_.size(results)) {
           return [];
         }

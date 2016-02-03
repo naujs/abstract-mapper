@@ -103,18 +103,16 @@ class DataMapper extends Component {
    * @param  {PersistedModel} Model
    * @return {PersistedModel | null}
    */
-  find(Model, criteria, options = {}) {
+  findOne(Model, criteria = {}, options = {}) {
     let name = Model.prototype.modelName();
-    return this.getConnector().find(name, criteria, options).then((result) => {
-      if (!result) {
-        return null;
+    criteria.limit = 1;
+
+    return this.findAll(Model, criteria, options).then((instances) => {
+      if (instances.length) {
+        return instances[0];
       }
 
-      let instance = new Model(result);
-
-      return onAfterFind(instance, options).then(() => {
-        return instance;
-      });
+      return null;
     });
   }
 
@@ -124,14 +122,14 @@ class DataMapper extends Component {
     let where = {};
     where[pk] = value;
 
-    return this.find(Model, {
+    return this.findOne(Model, {
       where: where
     }, options);
   }
 
   findAll(Model, criteria, options = {}) {
     let name = Model.prototype.modelName();
-    return this.getConnector().findAll(name, criteria, options).then((results) => {
+    return this.getConnector().read(name, criteria, options).then((results) => {
       if (!_.isArray(results) || !_.size(results)) {
         return [];
       }

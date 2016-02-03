@@ -7,9 +7,8 @@ var PersistedModel = require('@naujs/persisted-model')
   , _ = require('lodash');
 
 class DummyConnector {}
-DummyConnector.prototype.find = jasmine.createSpy('find');
-DummyConnector.prototype.findAll = jasmine.createSpy('findAll');
 DummyConnector.prototype.create = jasmine.createSpy('create');
+DummyConnector.prototype.read = jasmine.createSpy('read');
 DummyConnector.prototype.update = jasmine.createSpy('update');
 DummyConnector.prototype.delete = jasmine.createSpy('delete');
 
@@ -51,10 +50,10 @@ describe('DataMapper', () => {
     DummyModel.prototype.onAfterFind.calls.reset();
   });
 
-  describe('#find', () => {
-    it('should call #find on the connector', () => {
-      connector.find.and.callFake(() => {
-        return Promise.resolve({});
+  describe('#findOne', () => {
+    it('should call #read on the connector', () => {
+      connector.read.and.callFake(() => {
+        return Promise.resolve([]);
       });
 
       var criteria = {
@@ -65,18 +64,18 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      return mapper.find(DummyModel, criteria, options).then(() => {
-        expect(connector.find).toHaveBeenCalledWith('test', criteria, options);
+      return mapper.findOne(DummyModel, criteria, options).then(() => {
+        expect(connector.read).toHaveBeenCalledWith('test', criteria, options);
       });
     });
 
     it('should populate the model with the result', () => {
-      connector.find.and.callFake(() => {
-        return Promise.resolve({
+      connector.read.and.callFake(() => {
+        return Promise.resolve([{
           id: 1,
           firstName: 'Tan',
           lastName: 'Nguyen'
-        });
+        }]);
       });
 
       var criteria = {
@@ -87,7 +86,7 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      return mapper.find(DummyModel, criteria, options).then((instance) => {
+      return mapper.findOne(DummyModel, criteria, options).then((instance) => {
         expect(instance instanceof DummyModel).toBe(true);
         expect(instance.id).toEqual(1);
         expect(instance.firstName).toEqual('Tan');
@@ -96,15 +95,19 @@ describe('DataMapper', () => {
     });
 
     it('should call #onAfterFind when found the instance', () => {
-      connector.find.and.callFake(() => {
-        return Promise.resolve({});
+      connector.read.and.callFake(() => {
+        return Promise.resolve([{
+          id: 1,
+          firstName: 'Tan',
+          lastName: 'Nguyen'
+        }]);
       });
 
       var options = {
         random: 'stuff'
       };
 
-      return mapper.find(DummyModel, {}, options).then(() => {
+      return mapper.findOne(DummyModel, {}, options).then(() => {
         expect(DummyModel.prototype.onAfterFind).toHaveBeenCalledWith(options);
         expect(DummyModel.prototype.onAfterFind.calls.count()).toEqual(1);
       });
@@ -113,8 +116,8 @@ describe('DataMapper', () => {
   });
 
   describe('#findByPk', () => {
-    it('should call #find with correct criteria', () => {
-      spyOn(mapper, 'find').and.callFake(() => {
+    it('should call #findOne with correct criteria', () => {
+      spyOn(mapper, 'findOne').and.callFake(() => {
         return Promise.resolve({});
       });
 
@@ -123,7 +126,7 @@ describe('DataMapper', () => {
       };
 
       return mapper.findByPk(DummyModel, 1, options).then(() => {
-        expect(mapper.find).toHaveBeenCalledWith(DummyModel, {
+        expect(mapper.findOne).toHaveBeenCalledWith(DummyModel, {
           where: {
             'id': 1
           }
@@ -134,7 +137,7 @@ describe('DataMapper', () => {
 
   describe('#findAll', () => {
     it('should call #findAll on the connector', () => {
-      connector.findAll.and.callFake(() => {
+      connector.read.and.callFake(() => {
         return Promise.resolve([
           {},
           {}
@@ -150,12 +153,12 @@ describe('DataMapper', () => {
       };
 
       return mapper.findAll(DummyModel, criteria, options).then(() => {
-        expect(connector.findAll).toHaveBeenCalledWith('test', criteria, options);
+        expect(connector.read).toHaveBeenCalledWith('test', criteria, options);
       });
     });
 
     it('should populate the model with the result', () => {
-      connector.findAll.and.callFake(() => {
+      connector.read.and.callFake(() => {
         return Promise.resolve([
           {
             id: 1,
@@ -189,7 +192,7 @@ describe('DataMapper', () => {
     });
 
     it('should call #onAfterFind on each instance found', () => {
-      connector.findAll.and.callFake(() => {
+      connector.read.and.callFake(() => {
         return Promise.resolve([{}, {}]);
       });
 
