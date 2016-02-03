@@ -257,8 +257,8 @@ var DataMapper = (function (_Component) {
       return this.update(model, options);
     }
   }, {
-    key: 'delete',
-    value: function _delete(model) {
+    key: 'deleteByPk',
+    value: function deleteByPk(model) {
       var _this4 = this;
 
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -274,7 +274,6 @@ var DataMapper = (function (_Component) {
           return false;
         }
 
-        var attributes = model.getPersistableAttributes();
         var name = model.modelName();
         var criteria = {};
         criteria.where = {};

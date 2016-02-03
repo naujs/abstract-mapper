@@ -220,7 +220,7 @@ class DataMapper extends Component {
     return this.update(model, options);
   }
 
-  delete(model, options = {}) {
+  deleteByPk(model, options = {}) {
     checkPersistedModel(model);
 
     if (model.isNew()) {
@@ -232,7 +232,6 @@ class DataMapper extends Component {
         return false;
       }
 
-      let attributes = model.getPersistableAttributes();
       let name = model.modelName();
       let criteria = {};
       criteria.where = {};

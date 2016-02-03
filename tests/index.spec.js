@@ -52,7 +52,7 @@ describe('DataMapper', () => {
   });
 
   describe('#find', () => {
-    it('should call #find on the connector', (done) => {
+    it('should call #find on the connector', () => {
       connector.find.and.callFake(() => {
         return Promise.resolve({});
       });
@@ -65,12 +65,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.find(DummyModel, criteria, options).then(() => {
+      return mapper.find(DummyModel, criteria, options).then(() => {
         expect(connector.find).toHaveBeenCalledWith('test', criteria, options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should populate the model with the result', (done) => {
+    it('should populate the model with the result', () => {
       connector.find.and.callFake(() => {
         return Promise.resolve({
           id: 1,
@@ -87,15 +87,15 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.find(DummyModel, criteria, options).then((instance) => {
+      return mapper.find(DummyModel, criteria, options).then((instance) => {
         expect(instance instanceof DummyModel).toBe(true);
         expect(instance.id).toEqual(1);
         expect(instance.firstName).toEqual('Tan');
         expect(instance.lastName).toEqual('Nguyen');
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onAfterFind when found the instance', (done) => {
+    it('should call #onAfterFind when found the instance', () => {
       connector.find.and.callFake(() => {
         return Promise.resolve({});
       });
@@ -104,16 +104,16 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.find(DummyModel, {}, options).then(() => {
+      return mapper.find(DummyModel, {}, options).then(() => {
         expect(DummyModel.prototype.onAfterFind).toHaveBeenCalledWith(options);
         expect(DummyModel.prototype.onAfterFind.calls.count()).toEqual(1);
-      }).catch(fail).then(done);
+      });
     });
 
   });
 
   describe('#findByPk', () => {
-    it('should call #find with correct criteria', (done) => {
+    it('should call #find with correct criteria', () => {
       spyOn(mapper, 'find').and.callFake(() => {
         return Promise.resolve({});
       });
@@ -122,18 +122,18 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.findByPk(DummyModel, 1, options).then(() => {
+      return mapper.findByPk(DummyModel, 1, options).then(() => {
         expect(mapper.find).toHaveBeenCalledWith(DummyModel, {
           where: {
             'id': 1
           }
         }, options);
-      }).then(done, fail);
+      });
     });
   });
 
   describe('#findAll', () => {
-    it('should call #findAll on the connector', (done) => {
+    it('should call #findAll on the connector', () => {
       connector.findAll.and.callFake(() => {
         return Promise.resolve([
           {},
@@ -149,12 +149,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.findAll(DummyModel, criteria, options).then(() => {
+      return mapper.findAll(DummyModel, criteria, options).then(() => {
         expect(connector.findAll).toHaveBeenCalledWith('test', criteria, options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should populate the model with the result', (done) => {
+    it('should populate the model with the result', () => {
       connector.findAll.and.callFake(() => {
         return Promise.resolve([
           {
@@ -178,17 +178,17 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.findAll(DummyModel, criteria, options).then((instances) => {
+      return mapper.findAll(DummyModel, criteria, options).then((instances) => {
         _.each(instances, (instance, index) => { //eslint-disable-line max-nested-callbacks
           expect(instance instanceof DummyModel).toBe(true);
           expect(instance.id).toEqual(index + 1);
           expect(instance.firstName).toEqual('Tan');
           expect(instance.lastName).toEqual('Nguyen');
         });
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onAfterFind on each instance found', (done) => {
+    it('should call #onAfterFind on each instance found', () => {
       connector.findAll.and.callFake(() => {
         return Promise.resolve([{}, {}]);
       });
@@ -197,15 +197,15 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.findAll(DummyModel, {}, options).then(() => {
+      return mapper.findAll(DummyModel, {}, options).then(() => {
         expect(DummyModel.prototype.onAfterFind.calls.count()).toEqual(2);
-      }).catch(fail).then(done);
+      });
     });
 
   });
 
   describe('#create', () => {
-    it('should call #create on the connector', (done) => {
+    it('should call #create on the connector', () => {
       var instance = new DummyModel({
         firstName: 'Tan',
         lastName: 'Nguyen',
@@ -220,15 +220,15 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then(() => {
+      return mapper.create(instance, options).then(() => {
         expect(connector.create).toHaveBeenCalledWith('test', {
           firstName: 'Tan',
           lastName: 'Nguyen'
         }, options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should set attributes for the model afterward', (done) => {
+    it('should set attributes for the model afterward', () => {
       var instance = new DummyModel({
         firstName: 'Tan',
         lastName: 'Nguyen',
@@ -247,7 +247,7 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then((instance) => {
+      return mapper.create(instance, options).then((instance) => {
         expect(connector.create).toHaveBeenCalledWith('test', {
           firstName: 'Tan',
           lastName: 'Nguyen'
@@ -255,10 +255,10 @@ describe('DataMapper', () => {
 
         expect(instance instanceof DummyModel).toBe(true);
         expect(instance.id).toEqual(1);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #validate on the model', (done) => {
+    it('should call #validate on the model', () => {
       var instance = new DummyModel();
       connector.create.and.callFake(() => {
         return Promise.resolve(instance);
@@ -272,12 +272,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then(() => {
+      return mapper.create(instance, options).then(() => {
         expect(instance.validate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onBeforeCreate on the model', (done) => {
+    it('should call #onBeforeCreate on the model', () => {
       var instance = new DummyModel();
       connector.create.and.callFake(() => {
         return Promise.resolve(instance);
@@ -291,12 +291,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then(() => {
+      return mapper.create(instance, options).then(() => {
         expect(instance.onBeforeCreate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should not call #onBeforeCreate if validation fails', (done) => {
+    it('should not call #onBeforeCreate if validation fails', () => {
       var instance = new DummyModel();
       connector.create.and.callFake(() => {
         return Promise.resolve(instance);
@@ -314,12 +314,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then(() => {
+      return mapper.create(instance, options).then(() => {
         expect(instance.onBeforeCreate).not.toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onAfterCreate on the model', (done) => {
+    it('should call #onAfterCreate on the model', () => {
       var instance = new DummyModel();
       connector.create.and.callFake(() => {
         return Promise.resolve(instance);
@@ -333,14 +333,14 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.create(instance, options).then(() => {
+      return mapper.create(instance, options).then(() => {
         expect(instance.onAfterCreate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
   });
 
   describe('#update', () => {
-    it('should call #update on the connector', (done) => {
+    it('should call #update on the connector', () => {
       var instance = new DummyModel({
         id: 1,
         firstName: 'Tan',
@@ -356,7 +356,7 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then(() => {
+      return mapper.update(instance, options).then(() => {
         expect(connector.update).toHaveBeenCalledWith('test', {
           where: {
             id: 1
@@ -365,10 +365,10 @@ describe('DataMapper', () => {
           firstName: 'Tan',
           lastName: 'Nguyen'
         }, options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should set attributes for the model afterward', (done) => {
+    it('should set attributes for the model afterward', () => {
       var instance = new DummyModel({
         id: 1,
         firstName: 'Tan',
@@ -387,14 +387,14 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then((instance) => {
+      return mapper.update(instance, options).then((instance) => {
         expect(instance instanceof DummyModel).toBe(true);
         expect(instance.id).toEqual(1);
         expect(instance.lastName).toEqual('Nguyen');
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #validate on the model', (done) => {
+    it('should call #validate on the model', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -411,12 +411,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then(() => {
+      return mapper.update(instance, options).then(() => {
         expect(instance.validate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onBeforeUpdate on the model', (done) => {
+    it('should call #onBeforeUpdate on the model', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -433,12 +433,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then(() => {
+      return mapper.update(instance, options).then(() => {
         expect(instance.onBeforeUpdate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should not call #onBeforeUpdate if validation fails', (done) => {
+    it('should not call #onBeforeUpdate if validation fails', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -459,12 +459,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then(() => {
+      return mapper.update(instance, options).then(() => {
         expect(instance.onBeforeUpdate).not.toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onAfterUpdate on the model', (done) => {
+    it('should call #onAfterUpdate on the model', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -481,14 +481,14 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.update(instance, options).then(() => {
+      return mapper.update(instance, options).then(() => {
         expect(instance.onAfterUpdate).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
   });
 
-  describe('#delete', () => {
-    it('should call #delete on the connector', (done) => {
+  describe('#deleteByPk', () => {
+    it('should call #delete on the connector', () => {
       var instance = new DummyModel({
         id: 1,
         firstName: 'Tan',
@@ -504,16 +504,16 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.delete(instance, options).then(() => {
+      return mapper.deleteByPk(instance, options).then(() => {
         expect(connector.delete).toHaveBeenCalledWith('test', {
           where: {
             id: 1
           }
         }, options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onBeforeDelete on the model', (done) => {
+    it('should call #onBeforeDelete on the model', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -530,12 +530,12 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.delete(instance, options).then(() => {
+      return mapper.deleteByPk(instance, options).then(() => {
         expect(instance.onBeforeDelete).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
 
-    it('should call #onAfterDelete on the model', (done) => {
+    it('should call #onAfterDelete on the model', () => {
       var instance = new DummyModel({
         id: 1
       });
@@ -552,9 +552,9 @@ describe('DataMapper', () => {
         random: 'stuff'
       };
 
-      mapper.delete(instance, options).then(() => {
+      return mapper.deleteByPk(instance, options).then(() => {
         expect(instance.onAfterDelete).toHaveBeenCalledWith(options);
-      }).catch(fail).then(done);
+      });
     });
   });
 
