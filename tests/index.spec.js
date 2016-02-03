@@ -487,6 +487,32 @@ describe('DataMapper', () => {
     });
   });
 
+  describe('#deleteAll', () => {
+    it('should call #delete on the connector', () => {
+      connector.delete.and.callFake(() => {
+        return Promise.resolve({});
+      });
+
+      var options = {
+        random: 'stuff'
+      };
+
+      var criteria = {
+        where: {
+          test: 1
+        }
+      };
+
+      return mapper.deleteAll(DummyModel, criteria, options).then(() => {
+        expect(connector.delete).toHaveBeenCalledWith('test', {
+          where: {
+            test: 1
+          }
+        }, options);
+      });
+    });
+  });
+
   describe('#deleteByPk', () => {
     it('should call #delete on the connector', () => {
       var instance = new DummyModel({

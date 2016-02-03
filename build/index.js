@@ -257,6 +257,14 @@ var DataMapper = (function (_Component) {
       return this.update(model, options);
     }
   }, {
+    key: 'deleteAll',
+    value: function deleteAll(Model, criteria) {
+      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+      var name = Model.prototype.modelName();
+      return this.getConnector().delete(name, criteria, options);
+    }
+  }, {
     key: 'deleteByPk',
     value: function deleteByPk(model) {
       var _this4 = this;

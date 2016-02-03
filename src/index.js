@@ -220,6 +220,11 @@ class DataMapper extends Component {
     return this.update(model, options);
   }
 
+  deleteAll(Model, criteria, options = {}) {
+    let name = Model.prototype.modelName();
+    return this.getConnector().delete(name, criteria, options);
+  }
+
   deleteByPk(model, options = {}) {
     checkPersistedModel(model);
 
