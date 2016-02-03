@@ -117,10 +117,14 @@ class DataMapper extends Component {
   }
 
   findByPk(Model, value, options = {}) {
-    let pk = Model.prototype.primaryKey();
+    let primaryKey = Model.prototype.primaryKey();
 
     let where = {};
-    where[pk] = value;
+    where[primaryKey] = value;
+
+    options = _.clone(options);
+    options.primaryKey = primaryKey;
+    options.primaryKeyValue = value;
 
     return this.findOne(Model, {
       where: where
@@ -201,6 +205,10 @@ class DataMapper extends Component {
         let primaryKey = model.primaryKey();
         criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
+        options = _.clone(options);
+        options.primaryKey = primaryKey;
+        options.primaryKeyValue = criteria.where[primaryKey];
+
         return this.getConnector().update(name, criteria, attributes, options).then((result) => {
           model.setAttributes(result);
           return onAfterUpdate(model, options);
@@ -240,6 +248,10 @@ class DataMapper extends Component {
       criteria.where = {};
       let primaryKey = model.primaryKey();
       criteria.where[primaryKey] = model.getPrimaryKeyValue();
+
+      options = _.clone(options);
+      options.primaryKey = primaryKey;
+      options.primaryKeyValue = criteria.where[primaryKey];
 
       return this.getConnector().delete(name, criteria, options).then((result) => {
         return onAfterDelete(model, options);

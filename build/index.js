@@ -140,10 +140,14 @@ var DataMapper = (function (_Component) {
     value: function findByPk(Model, value) {
       var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-      var pk = Model.prototype.primaryKey();
+      var primaryKey = Model.prototype.primaryKey();
 
       var where = {};
-      where[pk] = value;
+      where[primaryKey] = value;
+
+      options = _.clone(options);
+      options.primaryKey = primaryKey;
+      options.primaryKeyValue = value;
 
       return this.findOne(Model, {
         where: where
@@ -236,6 +240,10 @@ var DataMapper = (function (_Component) {
           var primaryKey = model.primaryKey();
           criteria.where[primaryKey] = model.getPrimaryKeyValue();
 
+          options = _.clone(options);
+          options.primaryKey = primaryKey;
+          options.primaryKeyValue = criteria.where[primaryKey];
+
           return _this3.getConnector().update(name, criteria, attributes, options).then(function (result) {
             model.setAttributes(result);
             return onAfterUpdate(model, options);
@@ -286,6 +294,10 @@ var DataMapper = (function (_Component) {
         criteria.where = {};
         var primaryKey = model.primaryKey();
         criteria.where[primaryKey] = model.getPrimaryKeyValue();
+
+        options = _.clone(options);
+        options.primaryKey = primaryKey;
+        options.primaryKeyValue = criteria.where[primaryKey];
 
         return _this4.getConnector().delete(name, criteria, options).then(function (result) {
           return onAfterDelete(model, options);

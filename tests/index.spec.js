@@ -122,7 +122,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.findByPk(DummyModel, 1, options).then(() => {
@@ -356,7 +358,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then(() => {
@@ -387,7 +391,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then((instance) => {
@@ -411,7 +417,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then(() => {
@@ -433,7 +441,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then(() => {
@@ -459,7 +469,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then(() => {
@@ -481,7 +493,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.update(instance, options).then(() => {
@@ -530,7 +544,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.deleteByPk(instance, options).then(() => {
@@ -556,7 +572,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.deleteByPk(instance, options).then(() => {
@@ -578,7 +596,9 @@ describe('DataMapper', () => {
       });
 
       var options = {
-        random: 'stuff'
+        random: 'stuff',
+        primaryKey: 'id',
+        primaryKeyValue: 1
       };
 
       return mapper.deleteByPk(instance, options).then(() => {
