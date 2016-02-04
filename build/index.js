@@ -272,8 +272,8 @@ var DataMapper = (function (_Component) {
       return this.getConnector().delete(name, criteria, options);
     }
   }, {
-    key: 'deleteByPk',
-    value: function deleteByPk(model) {
+    key: 'delete',
+    value: function _delete(model) {
       var _this4 = this;
 
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];

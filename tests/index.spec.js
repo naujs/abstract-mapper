@@ -530,7 +530,7 @@ describe('DataMapper', () => {
     });
   });
 
-  describe('#deleteByPk', () => {
+  describe('#delete', () => {
     it('should call #delete on the connector', () => {
       var instance = new DummyModel({
         id: 1,
@@ -549,7 +549,7 @@ describe('DataMapper', () => {
         primaryKeyValue: 1
       };
 
-      return mapper.deleteByPk(instance, options).then(() => {
+      return mapper.delete(instance, options).then(() => {
         expect(connector.delete).toHaveBeenCalledWith('test', {
           where: {
             id: 1
@@ -577,7 +577,7 @@ describe('DataMapper', () => {
         primaryKeyValue: 1
       };
 
-      return mapper.deleteByPk(instance, options).then(() => {
+      return mapper.delete(instance, options).then(() => {
         expect(instance.onBeforeDelete).toHaveBeenCalledWith(options);
       });
     });
@@ -601,7 +601,7 @@ describe('DataMapper', () => {
         primaryKeyValue: 1
       };
 
-      return mapper.deleteByPk(instance, options).then(() => {
+      return mapper.delete(instance, options).then(() => {
         expect(instance.onAfterDelete).toHaveBeenCalledWith(options);
       });
     });

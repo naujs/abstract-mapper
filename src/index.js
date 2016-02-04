@@ -231,7 +231,7 @@ class DataMapper extends Component {
     return this.getConnector().delete(name, criteria, options);
   }
 
-  deleteByPk(model, options = {}) {
+  delete(model, options = {}) {
     checkPersistedModel(model);
 
     if (model.isNew()) {
